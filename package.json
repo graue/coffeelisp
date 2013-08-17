@@ -1,0 +1,22 @@
+{
+    "name": "coffeelisp",
+    "version": "0.0.1",
+    "author": "Scott Feeney <scott@oceanbase.org>",
+    "description": "a small Lisp interpreter",
+    "private": true,
+    "scripts": {
+        "test": "jasmine-node --coffee spec"
+    },
+    "dependencies": {
+        "coffee-script": "1.6.x"
+    },
+    "devDependencies": {
+        "jasmine-node": "1.11.x"
+    },
+    "keywords": [
+        "lisp",
+        "scheme",
+        "interpreter"
+    ],
+    "license": "Creative Commons CC0 Universal 1.0"
+}
