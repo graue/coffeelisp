@@ -34,7 +34,7 @@ clone = (obj) ->
 class Lambda
   constructor: (@env, @argNames, @body) ->
 
-  apply: (args) ->
+  apply: (self, args) ->
     checkArgs @argNames.length, args.length, 'user-defined function'
     innerEnv = clone @env
     for arg, i in args
@@ -68,6 +68,9 @@ builtins =
 
 evalParsed = (expr, bindings = {}) ->
   head = expr[0] if expr[0]?
+  if head instanceof Array
+    head = evalParsed head, bindings
+
   if typeof expr == 'number'
     expr
   else if typeof expr == 'string'
