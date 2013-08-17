@@ -25,7 +25,7 @@ parseTokens = (tokens, start = 0) ->
     [curToken, 1]
 
 # Make a shallow copy.
-clone: (obj) ->
+clone = (obj) ->
   copy = {}
   for key, val of obj
     copy[key] = val
