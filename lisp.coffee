@@ -108,6 +108,19 @@ evalText = (txt, bindings) ->
   parsed = parseText txt
   evalParsed parsed, bindings
 
+writeVal = (val) ->
+  if val instanceof Array
+    '(' + (writeVal subval for subval in val).join(' ') + ')'
+  else if typeof val == 'number'
+    val.toString()
+  else if val instanceof Lambda
+    '[user-defined function]'
+  else if val instanceof Function
+    '[builtin function]'
+  else
+    val
+
 module.exports =
   parse: parseText
   eval: evalText
+  write: writeVal
