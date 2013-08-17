@@ -1,6 +1,8 @@
 class LispError extends Error
   constructor: (@message) ->
 
+class UnterminatedListError extends LispError
+
 parseText = (txt) ->
   tokens = txt.replace(/([\(\)])/g, ' $1 ').trim().split(/\s+/)
   [tree, consumed] = parseTokens tokens
@@ -18,7 +20,8 @@ parseTokens = (tokens, start = 0) ->
     parsedList = while tokens[index] != ')'
       [parsedElement, consumed] = parseTokens tokens, index
       index += consumed
-      throw new LispError 'Unterminated list' if index >= tokens.length
+      if index >= tokens.length
+        throw new UnterminatedListError 'Unterminated list'
       parsedElement
     [parsedList, index + 1 - start]
   else
@@ -133,3 +136,5 @@ module.exports =
   parse: parseText
   eval: evalText
   write: writeVal
+  LispError: LispError
+  UnterminatedListError: UnterminatedListError

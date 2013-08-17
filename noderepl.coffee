@@ -11,12 +11,20 @@ else
   }
   rl.setPrompt '> '
   bindings = {}
-  rl.on 'line', (text) ->
+  text = ''
+  rl.on 'line', (newText) ->
     try
+      text += newText
       result = lisp.eval text, bindings
       console.log lisp.write result
+      text = ''
+      rl.setPrompt '> '
     catch ex
-      console.log "Error: #{ex.message}"
+      if ex instanceof lisp.UnterminatedListError
+        # Assume the user just isn't finished typing, and give them a new line.
+        rl.setPrompt '..'
+      else
+        console.log "Error: #{ex.message}"
     rl.prompt()
   rl.on 'close', () ->
     console.log ''
