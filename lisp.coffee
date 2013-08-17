@@ -50,6 +50,9 @@ withCheckedArgs = (func, numArgs, name) ->
     checkArgs numArgs, args.length, name
     func args...
 
+# Test for truthiness for purposes of Lisp.
+truthy = (x) -> x? and x != false
+
 builtins =
   '+':       withCheckedArgs(((a, b) -> a + b),  2, '+')
   '-':       withCheckedArgs(((a, b) -> a - b),  2, '-')
@@ -60,8 +63,8 @@ builtins =
   '<=':      withCheckedArgs(((a, b) -> a <= b), 2, '<=')
   '>=':      withCheckedArgs(((a, b) -> a >= b), 2, '>=')
   'eq?':     withCheckedArgs(((a, b) -> a == b), 2, 'eq?')
-  'not':     withCheckedArgs(((a)    -> not a),  1, 'not')
-  'number?': withCheckedArgs(((a)    -> typeof a == 'number'), 1, 'number?')
+  'not':     withCheckedArgs(((a) -> not truthy(a)), 1, 'not')
+  'number?': withCheckedArgs(((a) -> typeof a == 'number'), 1, 'number?')
 
 evalParsed = (expr, bindings = {}) ->
   head = expr[0] if expr[0]?
@@ -86,7 +89,7 @@ evalParsed = (expr, bindings = {}) ->
   else if head == 'if'
     checkArgs 3, expr.length - 1, 'if'
     [pred, whenTrue, whenFalse] = expr[1..3]
-    choice = if evalParsed(pred, bindings) then whenTrue else whenFalse
+    choice = if truthy(evalParsed(pred, bindings)) then whenTrue else whenFalse
     evalParsed(choice, bindings)
   else if head == 'lambda'
     checkArgs 2, expr.length - 1, 'lambda definition'
