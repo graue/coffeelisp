@@ -36,3 +36,30 @@ describe 'quoting', ->
   it 'quotes lists', ->
     expect(lisp.eval '(quote (a b c))').toEqual ['a', 'b', 'c']
     expect(lisp.eval '(quote (quote (a b)))').toEqual ['quote', ['a', 'b']]
+
+describe 'if statement', ->
+  it 'evaluates only the first thing if expression is true', ->
+    expect(lisp.eval '(if #t 1 unbound-var)').toEqual 1
+  it 'evaluates only the second thing if expression is false', ->
+    expect(lisp.eval '(if #f unbound-var 2)').toEqual 2
+  it 'treats 0 and empty list as true', ->
+    expect(lisp.eval '(if 0 1 2)').toEqual 1
+    expect(lisp.eval '(if (quote ()) 1 2)').toEqual 1
+  it 'understands predicates', ->
+    expect(lisp.eval '(if (eq? 0 0) 1 2)').toEqual 1
+    expect(lisp.eval '(if (eq? 0 2) 1 2)').toEqual 2
+
+describe 'builtin functions', ->
+  it 'do math', ->
+    expect(lisp.eval '(- (+ (* 4 8) (/ 3 6)) 1)').toEqual 31.5
+  it 'negate booleans', ->
+    expect(lisp.eval '(not #t)').toEqual false
+    expect(lisp.eval '(not #f)').toEqual true
+
+describe 'defined vars', ->
+  it 'persist as long as bindings are reused', ->
+    bindings = {}
+    expect(lisp.eval '(define fingers 10)', bindings).toBeNull()
+    expect(lisp.eval '(define fingersPerHand (/ fingers 2))',
+      bindings).toBeNull()
+    expect(lisp.eval 'fingersPerHand', bindings).toEqual(5)
