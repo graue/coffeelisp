@@ -117,6 +117,12 @@ writeVal = (val) ->
     '[user-defined function]'
   else if val instanceof Function
     '[builtin function]'
+  else if val == null
+    'nil'
+  else if val == true
+    '#t'
+  else if val == false
+    '#f'
   else
     val
 
