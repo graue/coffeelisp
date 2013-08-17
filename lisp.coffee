@@ -97,9 +97,9 @@ evalParsed = (expr, bindings = {}) ->
     if argNames not instanceof Array
       throw new LispError "Expected argument list, got #{argNames}"
     new Lambda clone(bindings), argNames, body
-  else if (bindings[head]? or builtins[head]?).apply?
-    func = bindings[head]? or builtins[head]?
-    func.apply(expr[1..].map((expr) -> evalParsed expr, bindings))
+  else if bindings[head]?.apply? or builtins[head]?.apply?
+    func = bindings[head] or builtins[head]
+    func.apply(func, expr[1..].map((expr) -> evalParsed expr, bindings))
   else
     badThing = if bindings[head]? 'Non-function' else 'Unbound var'
     throw new LispError "#{badThing} #{head} in head position"
