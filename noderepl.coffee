@@ -19,5 +19,6 @@ else
       console.log "Error: #{ex.message}"
     rl.prompt()
   rl.on 'close', () ->
+    console.log ''
     process.exit()
   rl.prompt()
