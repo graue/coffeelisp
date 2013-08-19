@@ -107,7 +107,7 @@ evalParsed = (expr, bindings = {}) ->
     func = bindings[head] or builtins[head]
     func.apply(func, expr[1..].map((expr) -> evalParsed expr, bindings))
   else
-    badThing = if bindings[head]? 'Non-function' else 'Unbound var'
+    badThing = if bindings[head]? then 'Non-function' else 'Unbound var'
     throw new LispError "#{badThing} #{head} in head position"
 
 evalText = (txt, bindings) ->

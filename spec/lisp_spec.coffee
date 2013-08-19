@@ -63,3 +63,36 @@ describe 'defined vars', ->
     expect(lisp.eval '(define fingersPerHand (/ fingers 2))',
       bindings).toBeNull()
     expect(lisp.eval 'fingersPerHand', bindings).toEqual(5)
+
+describe 'error checking', ->
+  bindings = null
+  ex = null
+
+  beforeEach ->
+    bindings = {}
+    ex = null
+    lisp.eval '(define foo 42)', bindings
+
+  it 'catches using an unbound var', ->
+    try
+      lisp.eval '(+ foo bar)', bindings
+    catch exception
+      ex = exception
+    expect(ex instanceof lisp.LispError).toBeTruthy()
+    expect(ex.message).toEqual 'Unbound var bar'
+
+  it 'catches unbound vars in head position', ->
+    try
+      lisp.eval '(bar foo)', bindings
+    catch exception
+      ex = exception
+    expect(ex instanceof lisp.LispError).toBeTruthy()
+    expect(ex.message).toEqual 'Unbound var bar in head position'
+
+  it 'catches non-functions in head position', ->
+    try
+      lisp.eval '(foo bar)', bindings
+    catch exception
+      ex = exception
+    expect(ex instanceof lisp.LispError).toBeTruthy()
+    expect(ex.message).toEqual 'Non-function foo in head position'
