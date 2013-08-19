@@ -65,7 +65,7 @@ describe 'defined vars', ->
     expect(lisp.eval '(define fingers 10)', bindings).toBeNull()
     expect(lisp.eval '(define fingersPerHand (/ fingers 2))',
       bindings).toBeNull()
-    expect(lisp.eval 'fingersPerHand', bindings).toEqual(5)
+    expect(lisp.eval 'fingersPerHand', bindings).toEqual 5
 
 describe 'error checking', ->
   bindings = null
