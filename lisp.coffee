@@ -56,6 +56,25 @@ withCheckedArgs = (func, numArgs, name) ->
 # Test for truthiness for purposes of Lisp.
 truthy = (x) -> x? and x != false
 
+checkList = (a, func) ->
+  throw new LispError "Non-list argument to #{func}" unless a instanceof Array
+
+checkNonEmptyList = (a, func) ->
+  checkList a, func
+  throw new LispError "Empty list passed to #{func}" if a.length == 0
+
+car = (xs) ->
+  checkNonEmptyList xs, 'car'
+  xs[0]
+
+cdr = (xs) ->
+  checkNonEmptyList xs, 'cdr'
+  xs.slice(1)
+
+length = (xs) ->
+  checkList xs, 'length'
+  xs.length
+
 builtins =
   '+':       withCheckedArgs(((a, b) -> a + b),  2, '+')
   '-':       withCheckedArgs(((a, b) -> a - b),  2, '-')
@@ -68,6 +87,9 @@ builtins =
   'eq?':     withCheckedArgs(((a, b) -> a == b), 2, 'eq?')
   'not':     withCheckedArgs(((a) -> not truthy(a)), 1, 'not')
   'number?': withCheckedArgs(((a) -> typeof a == 'number'), 1, 'number?')
+  'car':     withCheckedArgs(car, 1, 'car')
+  'cdr':     withCheckedArgs(cdr, 1, 'cdr')
+  'length':  withCheckedArgs(length, 1, 'length')
 
 evalParsed = (expr, bindings = {}) ->
   head = expr[0] if expr[0]?

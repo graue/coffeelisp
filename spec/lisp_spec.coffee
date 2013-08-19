@@ -58,6 +58,12 @@ describe 'builtin functions', ->
   they 'negate booleans', ->
     expect(lisp.eval '(not #t)').toEqual false
     expect(lisp.eval '(not #f)').toEqual true
+  they 'find the head of a list', ->
+    expect(lisp.eval '(car (quote (1 2 3)))').toEqual 1
+  they 'take the rest of a list after the head', ->
+    expect(lisp.eval '(cdr (quote (1 2 3)))').toEqual [2, 3]
+  they 'calculate length of a list', ->
+    expect(lisp.eval '(length (quote (a b c)))').toEqual 3
 
 describe 'defined vars', ->
   they 'persist as long as bindings are reused', ->
