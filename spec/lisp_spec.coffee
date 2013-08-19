@@ -1,5 +1,8 @@
 lisp = require '../lisp'
 
+# For more natural tests about plural subjects, define 'they'.
+they = it
+
 describe 'the parser', ->
   it 'parses numbers', ->
     expect(lisp.parse '243').toEqual 243
@@ -17,13 +20,13 @@ describe 'the parser', ->
     expect(lisp.parse '(- 2 1)').toEqual ['-', 2, 1]
 
 describe 'scalars', ->
-  it 'evaluate to themselves if numeric', ->
+  they 'evaluate to themselves if numeric', ->
     expect(lisp.eval '192').toEqual 192
-  it 'refer to bindings', ->
+  they 'refer to bindings', ->
     expect(lisp.eval 'foo', {'foo': 42}).toEqual 42
-  it 'will throw if unbound', ->
+  they 'will throw if unbound', ->
     expect(() -> lisp.eval('bar', {'foo': 42})).toThrow()
-  it 'can include booleans', ->
+  they 'can include booleans', ->
     expect(lisp.eval '#t').toEqual true
     expect(lisp.eval '#f').toEqual false
 
@@ -50,14 +53,14 @@ describe 'if statement', ->
     expect(lisp.eval '(if (eq? 0 2) 1 2)').toEqual 2
 
 describe 'builtin functions', ->
-  it 'do math', ->
+  they 'do math', ->
     expect(lisp.eval '(- (+ (* 4 8) (/ 3 6)) 1)').toEqual 31.5
-  it 'negate booleans', ->
+  they 'negate booleans', ->
     expect(lisp.eval '(not #t)').toEqual false
     expect(lisp.eval '(not #f)').toEqual true
 
 describe 'defined vars', ->
-  it 'persist as long as bindings are reused', ->
+  they 'persist as long as bindings are reused', ->
     bindings = {}
     expect(lisp.eval '(define fingers 10)', bindings).toBeNull()
     expect(lisp.eval '(define fingersPerHand (/ fingers 2))',
