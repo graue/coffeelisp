@@ -25,6 +25,8 @@ else
         rl.setPrompt '..'
       else
         console.log "Error: #{ex.message}"
+        text = ''
+        rl.setPrompt '> '
     rl.prompt()
   rl.on 'close', () ->
     console.log ''
