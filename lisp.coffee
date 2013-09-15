@@ -75,6 +75,22 @@ length = (xs) ->
   checkList xs, 'length'
   xs.length
 
+writeOrLog = (str) ->
+  if process?.stdout?
+    process.stdout.write str
+  else
+    # console.log adds a newline at the end, so remove one if we can.
+    if str[str.length-1] = '\n'
+      str = str[0...str.length-1]
+    console.log str
+  null
+
+display = (obj) ->
+  writeOrLog writeVal obj
+
+newline = () ->
+  writeOrLog '\n'
+
 builtins =
   '+':       withCheckedArgs(((a, b) -> a + b),  2, '+')
   '-':       withCheckedArgs(((a, b) -> a - b),  2, '-')
@@ -90,6 +106,8 @@ builtins =
   'car':     withCheckedArgs(car, 1, 'car')
   'cdr':     withCheckedArgs(cdr, 1, 'cdr')
   'length':  withCheckedArgs(length, 1, 'length')
+  'display': withCheckedArgs(display, 1, 'display')
+  'newline': withCheckedArgs(newline, 0, 'newline')
 
 evalParsed = (expr, bindings = {}) ->
   head = expr[0] if expr[0]?
