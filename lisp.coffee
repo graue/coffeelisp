@@ -143,8 +143,12 @@ evalParsed = (expr, bindings = {}) ->
     if argNames not instanceof Array
       throw new LispError "Expected argument list, got #{argNames}"
     new Lambda clone(bindings), argNames, body
-  else if bindings[head]?.apply? or builtins[head]?.apply?
-    func = bindings[head] or builtins[head]
+  else if head.apply? or bindings[head]?.apply? or builtins[head]?.apply?
+    func =
+      if head.apply
+        head
+      else
+        bindings[head] or builtins[head]
     func.apply(func, expr[1..].map((expr) -> evalParsed expr, bindings))
   else
     badThing = if bindings[head]? then 'Non-function' else 'Unbound var'
